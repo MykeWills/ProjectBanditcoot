@@ -11,16 +11,18 @@ public class PlayerSystem : MonoBehaviour
     [Serializable]
     public struct PlayerControl
     {
-        public float speed;
+        public float dashTimeReduceSpeed;
         public float gravity;
         public float jumpForce;
         public float dashForce;
+        public float walkSpeed;
+        public float runSpeed;
         public bool isJumping;
         public bool isGrounded;
         public bool isMoving;
         public bool isRunnning;
         public bool isDashing;
-
+        
     }
 
     public PlayerControl playerControl;
@@ -36,8 +38,10 @@ public class PlayerSystem : MonoBehaviour
     private void Update()
 
     {
-        MovePlayer();
         Dash();
+        Jump();
+        MovePlayer();
+        
 
 
 
@@ -49,9 +53,56 @@ public class PlayerSystem : MonoBehaviour
 
     private void MovePlayer()
     {
-        float xMove = inputPlayer.GetAxisRaw("Horizontal");
-        float zMove = inputPlayer.GetAxisRaw("Vertical");
+       
+        moveDirection.y -= time * playerControl.gravity;
+        moveDirection.x = xMove;
+        if (!playerControl.isDashing)
+        {
+            // moving character controller forward/back on input
+            
+            moveDirection.z = zMove;
+        }
+        else
+        {
+            // moving character controller forward/back on dash
+            if(moveDirection.z > 0)
+            {
+                
+                
+                moveDirection.z -= time * playerControl.dashTimeReduceSpeed;
+                moveDirection.z = Mathf.Clamp(moveDirection.z, 0, playerControl.dashForce);
+                
 
+
+            }
+            
+            else if(moveDirection.z < 0)
+            {
+                
+                
+                moveDirection.z += time * playerControl.dashTimeReduceSpeed;
+                moveDirection.z = Mathf.Clamp(moveDirection.z, -playerControl.dashForce,0);
+                
+
+
+            }
+            if (moveDirection.z == 0)
+            {
+                playerControl.isDashing = false;
+            }
+
+        }
+        playerControl.isRunnning = inputPlayer.GetButton("Run");
+        moveSpeed = playerControl.isRunnning ? playerControl.runSpeed : playerControl.walkSpeed;
+        playerControl.isGrounded = (m_characterController.Move(moveDirection * time * moveSpeed) & CollisionFlags.Below) != 0;
+    }
+
+    private void Jump()
+    {
+        if (playerControl.isJumping == true)
+        {
+            return;
+        }
         if (!inputPlayer.GetButton("Jump")) jumpTimer++;
 
         else if (inputPlayer.GetButton("Jump") && jumpTimer >= 1)
@@ -61,30 +112,32 @@ public class PlayerSystem : MonoBehaviour
             jumpTimer = 0;
         }
 
-        
 
-        moveDirection.y -= time * playerControl.gravity;
-        moveDirection.x = xMove;
-        moveDirection.z = zMove;
-
-
-        playerControl.isGrounded = (m_characterController.Move(moveDirection * time * playerControl.speed) & CollisionFlags.Below) != 0;
     }
     private void Dash()
     {
+        if (playerControl.isDashing)
+        {
+            return;
+        }
         if (!inputPlayer.GetButton("Dash")) dashTimer++;
 
-        else if (inputPlayer.GetButton("Dash") && dashTimer >= 1)
+        else if (inputPlayer.GetButton("Dash") && dashTimer > 0)
         {
-            moveDirection.z = playerControl.dashForce;
+            if (zMove > 0)
+            {
+                moveDirection.z = playerControl.dashForce;
+            }
+            else if (zMove < 0)
+            {
+                moveDirection.z = -playerControl.dashForce;
+            }
+            
             playerControl.isDashing = true;
             dashTimer = 0;
         }
     }
-    private void ReduceDashTime()
-    {
-
-    }
+    
 
     #region PRIVATE FIELDS
     private CharacterController m_characterController => GetComponent<CharacterController>();
@@ -98,10 +151,12 @@ public class PlayerSystem : MonoBehaviour
     private Player inputPlayer => ReInput.players.GetPlayer(0);
     private float jumpTimer = 0;
     private float dashTimer = 0;
-
+    private float xMove => inputPlayer.GetAxisRaw("Horizontal");
+    private float zMove => inputPlayer.GetAxisRaw("Vertical");
+    private float moveSpeed = 0;
     #endregion PRIVATE FIELDS
 
 
-  
+
 
 }
