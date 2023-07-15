@@ -85,8 +85,8 @@ public class PlayerSystemReference : MonoBehaviour
                 // since the playerControl.moveDirection Z is [forward], lets [DECREASE] the move over time
                 playerControl.moveDirection.z -= m_time * playerControl.dashTimeReduceSpeed;
 
-                /// Note: we want the speed no faster than the force applied, but we want to clamp the minimum value to 0 to "check it".
-                // lets clamp the playerControl.moveDirection Z between [MIN == 0] and [MAX == positive dashForce] speeds
+                /// Note: we want the force amount to be no faster than the force applied, but we want to clamp the minimum value to 0 to "check it".
+                // lets clamp the playerControl.moveDirection Z between [MIN == 0] and [MAX == positive dashForce]
                 playerControl.moveDirection.z = Mathf.Clamp(playerControl.moveDirection.z, 0, playerControl.dashForce);
             }
 
@@ -97,8 +97,8 @@ public class PlayerSystemReference : MonoBehaviour
                 // since the playerControl.moveDirection Z is [back], lets [INCREASE] the move over time
                 playerControl.moveDirection.z += m_time * playerControl.dashTimeReduceSpeed;
 
-                /// Note: we want the speed no less than the force applied, but we want to clamp the maximum value to 0 to "check it".
-                // lets clamp the playerControl.moveDirection Z between [MIN == negative dashforce] and [MAX == 0] speeds
+                /// Note: we want the force amount to be no less than the force applied, but we want to clamp the maximum value to 0 to "check it".
+                // lets clamp the playerControl.moveDirection Z between [MIN == negative dashforce] and [MAX == 0]
                 playerControl.moveDirection.z = Mathf.Clamp(playerControl.moveDirection.z, -playerControl.dashForce, 0);
             }
 
@@ -135,7 +135,7 @@ public class PlayerSystemReference : MonoBehaviour
 
         ///Note: This is simplized code, it is the same as this ---->
 
-        // moves the player based on playerControl.moveDirection times speed
+        // moves the player based on moveDirection times speed over time
         ///m_characterController.Move(playerControl.moveDirection * time * moveSpeed;
 
         // checks if theres a collision below the character controller collider
@@ -178,10 +178,8 @@ public class PlayerSystemReference : MonoBehaviour
             return;
         }
 
-        // while the jump button [Is Not] pressed, increase the jump value so you can jump again
 
-
-        // while the jump button [is] pressed [AND] the jump value is [Greater] than 0, make the player jump.
+        // while the jump button [is] pressed [AND] the action value is [Greater] than 0, make the player jump.
         if (m_inputPlayer.GetButton("Jump") && m_actionTimer > 0)
         {
             // set the playerControl.moveDirection Y to the jump force
@@ -190,7 +188,7 @@ public class PlayerSystemReference : MonoBehaviour
             // player is now jumping
             playerControl.isJumping = true;
 
-            // reset the jump value back to 0 so this [else if] stops running while the jump button is pressed.
+            // reset the jump value back to 0 so this [If Statement] stops running while the jump button is pressed.
             m_actionTimer = 0;
         }
 
@@ -208,10 +206,10 @@ public class PlayerSystemReference : MonoBehaviour
             return;
         }
 
-        // while the dash button [is] pressed [AND] the dash value is [Greater] than 0, make the player dash.
+        // while the dash button [is] pressed [AND] the action value is [Greater] than 0, make the player dash.
         if (m_inputPlayer.GetButton("Dash") && m_actionTimer > 0)
         {
-            /// Note: Since we want the player to dash [forward] or [backward] we need to check to see if the player is moving [forward] or [Backward] 
+            /// Note: Since we want the player to dash [forward] or [backward] based on Input, we need to check to see if the player input is moving [forward] or [Backward] 
 
             // check to see if player is moving [forward]
             if (m_zMove > 0)
@@ -230,7 +228,7 @@ public class PlayerSystemReference : MonoBehaviour
             // player is now dashing
             playerControl.isDashing = true;
 
-            // reset the dash value back to 0 so this [else if] stops running while the dash button is pressed.
+            // reset the dash value back to 0 so this [If Statement] stops running while the dash button is pressed.
             m_actionTimer = 0;
         }
     }
@@ -269,7 +267,7 @@ public class PlayerSystemReference : MonoBehaviour
 
     #region STRUCTS
     [Serializable]
-    /// we created a struct that tidies and keeps all player movement values together
+    /// we created a struct that tidies and keeps all player movement values together which can [all] be saved so a single value later
     public struct PlayerControl
     {
         [Header("Player Settings")]
