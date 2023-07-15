@@ -2005,6 +2005,7 @@ GameObject:
   - component: {fileID: 1618257946}
   - component: {fileID: 1618257945}
   - component: {fileID: 1618257942}
+  - component: {fileID: 1618257947}
   - component: {fileID: 1618257944}
   - component: {fileID: 1618257943}
   m_Layer: 8
@@ -2021,7 +2022,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1618257941}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1695ef5063ff39f4ead8639c0eae6bd4, type: 3}
   m_Name: 
@@ -2034,7 +2035,7 @@ MonoBehaviour:
     walkSpeed: 10
     runSpeed: 25
     isJumping: 0
-    isGrounded: 1
+    isGrounded: 0
     isMoving: 0
     isRunnning: 0
     isDashing: 0
@@ -2102,6 +2103,34 @@ Transform:
   m_Father: {fileID: 544728812}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1618257947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1618257941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a81cad6be08859f4b9b1f6302d4cbdc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerControl:
+    dashTimeReduceSpeed: 35
+    gravity: 5
+    jumpForce: 2
+    dashForce: 7.5
+    walkSpeed: 10
+    runSpeed: 25
+    acceleration: 0
+    deceleration: 0
+    friction: 0
+    isJumping: 0
+    isGrounded: 0
+    isMoving: 0
+    isRunning: 0
+    isDashing: 0
+    moveDirection: {x: 0, y: 0, z: 0}
 --- !u!1 &2123652126
 GameObject:
   m_ObjectHideFlags: 0
