@@ -14,6 +14,7 @@ public class PlayerSystem : MonoBehaviour
         public float speed;
         public float gravity;
         public float jumpForce;
+        public float dashForce;
         public bool isJumping;
         public bool isGrounded;
         public bool isMoving;
@@ -36,8 +37,10 @@ public class PlayerSystem : MonoBehaviour
 
     {
         MovePlayer();
+        Dash();
 
-       
+
+
     }
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
@@ -58,7 +61,7 @@ public class PlayerSystem : MonoBehaviour
             jumpTimer = 0;
         }
 
-        Debug.Log(moveDirection.y);
+        
 
         moveDirection.y -= time * playerControl.gravity;
         moveDirection.x = xMove;
@@ -69,7 +72,14 @@ public class PlayerSystem : MonoBehaviour
     }
     private void Dash()
     {
+        if (!inputPlayer.GetButton("Dash")) dashTimer++;
 
+        else if (inputPlayer.GetButton("Dash") && dashTimer >= 1)
+        {
+            moveDirection.z = playerControl.dashForce;
+            playerControl.isDashing = true;
+            dashTimer = 0;
+        }
     }
     private void ReduceDashTime()
     {
@@ -87,6 +97,7 @@ public class PlayerSystem : MonoBehaviour
     private Vector3 moveDirection = Vector3.zero;
     private Player inputPlayer => ReInput.players.GetPlayer(0);
     private float jumpTimer = 0;
+    private float dashTimer = 0;
 
     #endregion PRIVATE FIELDS
 
