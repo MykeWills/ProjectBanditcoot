@@ -10,13 +10,37 @@ public class PlatformSystem : MonoBehaviour
     [SerializeField] private float moveZSpeed = 1;
     [Space]
     [SerializeField] private bool switchDirections;
+    private Transform gameManager => GameManager.gameManager.transform;
 
-
-    void Update()
+    private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            
+
+            other.transform.parent = transform;
+        }
+
+
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+
+        if (other.gameObject.CompareTag("Player"))
+        {
+            other.transform.parent = gameManager;
+        }
+
+    }
+    void FixedUpdate()
+
+    {
+        
+        
         float storedXSpeed = moveXSpeed;
         float storedYSpeed = moveYSpeed;
-        float storedZSpeed = moveXSpeed;
+        float storedZSpeed = moveZSpeed;
 
         if(switchDirections == true)
         {
